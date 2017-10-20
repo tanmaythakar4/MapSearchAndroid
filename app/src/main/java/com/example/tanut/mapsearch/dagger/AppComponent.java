@@ -16,5 +16,7 @@ import dagger.Component;
 public interface AppComponent {
     void inject(MapSearchApp application);
     //void inject()
+    //void Inject(minimum)
+
     void inject(MapFragment mapFragment);
 }
