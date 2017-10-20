@@ -15,5 +15,6 @@ import dagger.Component;
 @Component(modules = {AppModule.class,MapModule.class})
 public interface AppComponent {
     void inject(MapSearchApp application);
+    //void inject()
     void inject(MapFragment mapFragment);
 }
