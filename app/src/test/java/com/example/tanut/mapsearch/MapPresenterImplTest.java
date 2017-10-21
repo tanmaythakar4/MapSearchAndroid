@@ -52,7 +52,7 @@ public class MapPresenterImplTest {
     public void shouldPassItems() {
         Mockito.when(mReader.read(null)).thenReturn(MANY_ITEM);
         presenter.getGeoPlaceData("TEST",null);
-        verify(view).showMarkerCluster(MANY_ITEM);
+        verify(view).showMarkerClusterLocal(MANY_ITEM);
     }
 
     @Test
