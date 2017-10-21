@@ -106,6 +106,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapM
 
     @Override
     public void showSnippet() {
-
+    //show snippet
     }
 }
