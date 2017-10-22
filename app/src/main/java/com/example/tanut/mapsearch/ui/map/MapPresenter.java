@@ -14,9 +14,6 @@ import java.util.List;
 public interface MapPresenter extends BaseFragmentPresenter {
 
 
-    public void getGeoPlaceData(String place, InputStream inputStream);
-
-    public void getDataFromService(GoogleMapWebService mapWebService);
 
     public void migrateToListFragment();
 

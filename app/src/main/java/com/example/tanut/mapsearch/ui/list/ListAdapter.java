@@ -19,11 +19,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListHolder>{
     }
     @Override
     public ListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+
         return null;
     }
 
     @Override
     public void onBindViewHolder(ListHolder holder, int position) {
+
 
     }
 
