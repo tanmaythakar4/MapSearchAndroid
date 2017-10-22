@@ -16,10 +16,6 @@ public interface MapMvpView extends MvpView {
 
     public void showMarkerAt(float latitude, float longitude);
 
-    public void showMarkerClusterLocal(List<MyItem> items);
-
-    public void showMarkerCluster(List<MapItem> items);
-
     public void showSnippet();
 
 

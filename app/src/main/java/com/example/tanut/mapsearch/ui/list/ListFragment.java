@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.example.tanut.mapsearch.data.db.network.model.MapItem;
 import com.example.tanut.mapsearch.services.ApiClient;
 import com.example.tanut.mapsearch.services.GoogleMapWebService;
 import com.example.tanut.mapsearch.ui.base.BaseFragment;
+import com.example.tanut.mapsearch.ui.main.MainFragment;
 import com.example.tanut.mapsearch.ui.map.MapFragment;
 import com.example.tanut.mapsearch.ui.map.MapPresenterImpl;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,6 +32,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.InputStream;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -37,7 +40,7 @@ import javax.inject.Inject;
  * Created by Abhimanyu on 10/21/2017.
  */
 
-public class ListFragment extends BaseFragment {
+public class ListFragment extends BaseFragment implements MainFragment.onDataLoadedListener {
 
 
     public static final String TAG = "AboutFragment";
@@ -56,7 +59,7 @@ public class ListFragment extends BaseFragment {
     RecyclerView rv;
     GridView gridView;
 
-    public ListFragment(){
+    public ListFragment() {
 
     }
 
@@ -83,12 +86,12 @@ public class ListFragment extends BaseFragment {
 
         // Inflate the layout for this fragment
         //View view = inflater.inflate(R.layout.fragment_list, container, false);
-        Context ct = getContext();
-        rv = (RecyclerView)view.findViewById(R.id.recyclerview);
-        rv.setHasFixedSize(true);
-        rv.setAdapter(new ListAdapter(ct));
-        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rv.addOnScrollListener(onScrollListener);
+//        Context ct = getContext();
+//        rv = (RecyclerView)view.findViewById(R.id.recyclerview);
+//        rv.setHasFixedSize(true);
+//        rv.setAdapter(new ListAdapter(ct));
+//        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        rv.addOnScrollListener(onScrollListener);
         return view;
     }
 
@@ -109,17 +112,6 @@ public class ListFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        floatingActionButton = (FloatingActionButton)view.findViewById(R.id.floatingActionButton);
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent returnIntent = new Intent(getContext(), ListFragment.class);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentlist_container, ListFragment.newInstance(),ListFragment.TAG).commit();
-            }
-        });
-
     }
 
     @Override
@@ -128,8 +120,19 @@ public class ListFragment extends BaseFragment {
     }
 
     public void setUpGridView(GridMvpView view) {
-        mPresenter = new ListPresenterImpl(view ,new MyItemReader());
-        mPresenter.getGeoPlaceData(TAG,inputStream);
+        mPresenter = new ListPresenterImpl(view, new MyItemReader());
+        mPresenter.getGeoPlaceData(TAG, inputStream);
     }
 
+    @Override
+    public void onDataLoaded(List<MapItem> receivedData) {
+        Log.d(TAG, receivedData.size()+"");
+
+        // here you will get data from SERVICE
+    }
+
+    @Override
+    public void onLocalDataLoaded(List<MyItem> receivedData) {
+        // here you will get data from LOCAL
+    }
 }

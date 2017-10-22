@@ -22,6 +22,7 @@ import com.example.tanut.mapsearch.services.ApiClient;
 import com.example.tanut.mapsearch.services.GoogleMapWebService;
 import com.example.tanut.mapsearch.ui.base.BaseFragment;
 import com.example.tanut.mapsearch.ui.list.ListFragment;
+import com.example.tanut.mapsearch.ui.main.MainFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -39,28 +40,16 @@ import javax.inject.Inject;
  * Created by tanut on 10/18/2017.
  */
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapMvpView {
+public class MapFragment extends BaseFragment implements OnMapReadyCallback, MapMvpView, MainFragment.onDataLoadedListener {
 
     public static final String TAG = "AboutFragment";
 
     private GoogleMap googleMap = null;
     private MapView mapView;
-    private FloatingActionButton floatingActionButton;
     private ClusterManager<MyItem> mClusterManagerLocal;
     private ClusterManager<MapItem> mClusterManager;
-    private MapPresenterImpl mPresenter;
-    private final String DEFAULT_SEARCH = "bofa";
 
-    RecyclerView mRecyclerView;
-
-    @Inject
-    InputStream inputStream;
-
-    @Inject
-    ApiClient apiClient;
-
-    @Inject
-    GoogleMapWebService mGoogleMapWebService;
+    private RecyclerView mRecyclerView;
 
 
     public static MapFragment newInstance() {
@@ -86,25 +75,13 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapM
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        floatingActionButton = (FloatingActionButton)view.findViewById(R.id.floatingActionButton);
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent returnIntent = new Intent(getContext(), ListFragment.class);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentlist_container, ListFragment.newInstance(),ListFragment.TAG).commit();
-            }
-        });
-
-        //dagger
-        ((MapSearchApp) getActivity().getApplication()).getMapComponent().inject(this);
 
         mapView = (MapView) view.findViewById(R.id.mapView);
-        mRecyclerView = (RecyclerView)view.findViewById(R.id.rvSearchResult);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rvSearchResult);
     }
 
     @Override
@@ -115,13 +92,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapM
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        mPresenter = new MapPresenterImpl(this,new MyItemReader());
-
-       /* // for static data
-        mPresenter.getGeoPlaceData(DEFAULT_SEARCH,inputStream);*/
-       mPresenter.getDataFromService(mGoogleMapWebService);
-
-
     }
 
     @Override
@@ -134,64 +104,41 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapM
 
     }
 
-    // clustering for local data
-    @Override
-    public void showMarkerClusterLocal(List<MyItem> items) {
-        // 1 clustering
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(items.get(0).getPosition().latitude,items.get(0).getPosition().longitude), 10));
-        mClusterManagerLocal = new ClusterManager<MyItem>(getActivity(),googleMap);
-        googleMap.setOnCameraIdleListener(mClusterManagerLocal);
-        mClusterManagerLocal.addItems(items);
-
-        // 2 Recyclerview
-
-
-
-    }
-
-    // clustering for network data
-    @Override
-    public void showMarkerCluster(List<MapItem> items) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(items.get(0).getPosition().latitude,items.get(0).getPosition().longitude), 10));
-        mClusterManager = new ClusterManager<MapItem>(getActivity(),googleMap);
-        googleMap.setOnCameraIdleListener(mClusterManager);
-        mClusterManager.addItems(items);
-
-        Adapter adapter = new Adapter(getActivity(),items);
-        mRecyclerView.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-    }
 
     @Override
     public void showSnippet() {
-    //show snippet
+        //show snippet
     }
 
-    private void requestData(){
-        Intent intent = new Intent(getActivity(), GoogleMapWebService.class);
-        startService(intent);
+
+    @Override
+    public void onDataLoaded(List<MapItem> items) {
+
+            // Clustering
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(items.get(0).getPosition().latitude, items.get(0).getPosition().longitude), 10));
+            mClusterManager = new ClusterManager<MapItem>(getActivity(), googleMap);
+            googleMap.setOnCameraIdleListener(mClusterManager);
+            mClusterManager.addItems(items);
+
+        // RecyclerView
+        Adapter adapter = new Adapter(getContext(), items);
+        mRecyclerView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+
     }
 
-/*    private boolean checkGooglePlayServices() {
-        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
-        int result = googleAPI.isGooglePlayServicesAvailable(getContext());
-        if (result != ConnectionResult.SUCCESS) {
-            if (googleAPI.isUserResolvableError(result)) {
-                googleAPI.getErrorDialog(getActivity(), result,
-                        0).show();
-            }
-            return false;
+    @Override
+    public void onLocalDataLoaded(List<MyItem> items) {
+        // 1 clustering
+        if(googleMap!=null){
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(items.get(0).getPosition().latitude, items.get(0).getPosition().longitude), 10));
+        mClusterManagerLocal = new ClusterManager<MyItem>(getActivity(), googleMap);
+        googleMap.setOnCameraIdleListener(mClusterManagerLocal);
+        mClusterManagerLocal.addItems(items);
+
         }
-        return true;
-    }*/
 
-    private void startService(Intent intent) {
     }
-
-
-    private void displayData() {
-        //Displaying the data
-    }
-
 }

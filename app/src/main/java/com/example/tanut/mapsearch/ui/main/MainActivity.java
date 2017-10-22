@@ -1,11 +1,9 @@
-package com.example.tanut.mapsearch.ui;
+package com.example.tanut.mapsearch.ui.main;
 
-import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.tanut.mapsearch.R;
-import com.example.tanut.mapsearch.ui.map.MapFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,8 +11,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Load MapFragment
+        // Load Main Fragment
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, MapFragment.newInstance(),MapFragment.TAG).commit();
+                .replace(R.id.fragment_container, MainFragment.newInstance(), MainFragment.TAG).commit();
     }
 }
