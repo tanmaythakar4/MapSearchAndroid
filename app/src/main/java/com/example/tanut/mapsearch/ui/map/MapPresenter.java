@@ -18,4 +18,6 @@ public interface MapPresenter extends BaseFragmentPresenter {
 
     public void getDataFromService(GoogleMapWebService mapWebService);
 
+    public void migrateToListFragment();
+
 }

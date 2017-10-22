@@ -2,6 +2,7 @@ package com.example.tanut.mapsearch.ui.map;
 
 import android.util.Log;
 
+import com.example.tanut.mapsearch.R;
 import com.example.tanut.mapsearch.data.db.MyItemReader;
 import com.example.tanut.mapsearch.data.db.model.MyItem;
 import com.example.tanut.mapsearch.data.db.network.model.MapResult;
@@ -86,6 +87,14 @@ public class MapPresenterImpl implements MapPresenter {
             }
         });
 
+
+    }
+
+    @Override
+    public void migrateToListFragment() {
+        // Load MapFragment
+        //getSupportFragmentManager().beginTransaction()
+               // .replace(R.id.fragment_container, MapFragment.newInstance(),MapFragment.TAG).commit();
 
     }
 
