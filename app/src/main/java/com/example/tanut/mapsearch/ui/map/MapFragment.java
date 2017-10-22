@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.tanut.mapsearch.MapSearchApp;
 import com.example.tanut.mapsearch.R;
@@ -17,6 +21,7 @@ import com.example.tanut.mapsearch.data.db.network.model.MapItem;
 import com.example.tanut.mapsearch.services.ApiClient;
 import com.example.tanut.mapsearch.services.GoogleMapWebService;
 import com.example.tanut.mapsearch.ui.base.BaseFragment;
+import com.example.tanut.mapsearch.ui.list.ListFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -40,11 +45,14 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapM
 
     private GoogleMap googleMap = null;
     private MapView mapView;
+    private FloatingActionButton floatingActionButton;
     private ClusterManager<MyItem> mClusterManagerLocal;
     private ClusterManager<MapItem> mClusterManager;
     private MapPresenterImpl mPresenter;
     private final String DEFAULT_SEARCH = "bofa";
+
     RecyclerView mRecyclerView;
+
     @Inject
     InputStream inputStream;
 
@@ -71,13 +79,24 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapM
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
+        final View view = inflater.inflate(R.layout.fragment_map, container, false);
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        floatingActionButton = (FloatingActionButton)view.findViewById(R.id.floatingActionButton);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent returnIntent = new Intent(getContext(), ListFragment.class);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentlist_container, ListFragment.newInstance(),ListFragment.TAG).commit();
+            }
+        });
+
         //dagger
         ((MapSearchApp) getActivity().getApplication()).getMapComponent().inject(this);
 
@@ -130,7 +149,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapM
 
     }
 
-    // clusternig for network data
+    // clustering for network data
     @Override
     public void showMarkerCluster(List<MapItem> items) {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(items.get(0).getPosition().latitude,items.get(0).getPosition().longitude), 10));
@@ -170,15 +189,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapM
     private void startService(Intent intent) {
     }
 
-    //private Object mItemList;
-
-//    private BroadcastReceiver mBroadcastReceiver = (context, intent) -> {
-//        MyItem[] myitems = (MyItem[])intent.getParcelableArrayExtra(ApiClient.MY_SERVICE_PAYLOAD);
-//       // mItemList = ArrayList.asList(myitems);
-//        displayData();
-//    };
 
     private void displayData() {
         //Displaying the data
     }
+
 }
