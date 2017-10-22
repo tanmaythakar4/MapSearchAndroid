@@ -3,6 +3,8 @@ package com.example.tanut.mapsearch.ui.map;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +44,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapM
     private ClusterManager<MapItem> mClusterManager;
     private MapPresenterImpl mPresenter;
     private final String DEFAULT_SEARCH = "bofa";
-
+    RecyclerView mRecyclerView;
     @Inject
     InputStream inputStream;
 
@@ -80,7 +82,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapM
         ((MapSearchApp) getActivity().getApplication()).getMapComponent().inject(this);
 
         mapView = (MapView) view.findViewById(R.id.mapView);
-
+        mRecyclerView = (RecyclerView)view.findViewById(R.id.rvSearchResult);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);
@@ -116,19 +118,30 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,MapM
     // clustering for local data
     @Override
     public void showMarkerClusterLocal(List<MyItem> items) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+        // 1 clustering
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(items.get(0).getPosition().latitude,items.get(0).getPosition().longitude), 10));
         mClusterManagerLocal = new ClusterManager<MyItem>(getActivity(),googleMap);
         googleMap.setOnCameraIdleListener(mClusterManagerLocal);
         mClusterManagerLocal.addItems(items);
+
+        // 2 Recyclerview
+
+
+
     }
 
     // clusternig for network data
     @Override
     public void showMarkerCluster(List<MapItem> items) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 10));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(items.get(0).getPosition().latitude,items.get(0).getPosition().longitude), 10));
         mClusterManager = new ClusterManager<MapItem>(getActivity(),googleMap);
         googleMap.setOnCameraIdleListener(mClusterManager);
         mClusterManager.addItems(items);
+
+        Adapter adapter = new Adapter(getActivity(),items);
+        mRecyclerView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
     }
 
     @Override

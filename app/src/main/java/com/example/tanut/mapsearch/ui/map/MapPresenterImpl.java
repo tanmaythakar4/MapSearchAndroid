@@ -28,9 +28,7 @@ public class MapPresenterImpl implements MapPresenter {
     public MapPresenterImpl(MapMvpView view, MyItemReader myItemReader) {
         this.view = view;
         this.myItemReader = myItemReader;
-
     }
-
 
     @Override
     public void init(Object view) {
@@ -39,6 +37,7 @@ public class MapPresenterImpl implements MapPresenter {
 
     @Override
     public void getGeoPlaceData(String place,InputStream inputStream) {
+
         try {
             items = myItemReader.read(inputStream);
         }
@@ -46,16 +45,12 @@ public class MapPresenterImpl implements MapPresenter {
             view.onError("ON ERROR");
         }
 
-
-
         if(!items.isEmpty()){
             view.showMarkerClusterLocal(items);
         }
         else{
             view.showMessage("NO ITEM");
         }
-
-
     }
 
     @Override
@@ -63,8 +58,6 @@ public class MapPresenterImpl implements MapPresenter {
 
 
         Call<MapResult> call = mapWebService.getNearbyPlaces(Utils.QUERY,Integer.parseInt(Utils.RADIUS),Utils.KEY);
-
-
 
         call.enqueue(new Callback<MapResult>() {
             @Override
@@ -85,7 +78,6 @@ public class MapPresenterImpl implements MapPresenter {
                 view.onError("ON ERROR");
             }
         });
-
 
     }
 
