@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mRoot"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.tanut.mapsearch.ui.map.MapFragment">
+    tools:context="com.example.tanut.mapsearch.ui.list.ListFragment">>
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
+    <GridView
+        android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <FrameLayout
-        android:id="@+id/fragmentlist_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0">
 
-    </FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recyclerview">
+
+    </android.support.v7.widget.RecyclerView>
+
 
     <SearchView
         android:layout_width="match_parent"
@@ -35,12 +31,6 @@
         android:background="@android:color/white"
         android:layout_marginTop="11dp"
         android:id="@+id/searchView" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvSearchResult"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/searchView"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
