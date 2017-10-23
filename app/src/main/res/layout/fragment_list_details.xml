@@ -2,17 +2,42 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="30px"
+            android:id="@+id/imageView"
+            android:layout_below="@+id/buttonPanel" />
+        </android.support.v7.widget.CardView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewHeading"
+        android:textSize="32sp"
+        android:gravity="center"
+        android:fontFamily="Arial"
+        android:textStyle="bold"/>
 
-    <ImageView
+    <TextView
+        android:id="@+id/textViewLatLong"
         android:layout_width="match_parent"
-        android:layout_height="30px"
-        android:id="@+id/imageView"
-        android:layout_below="@+id/buttonPanel" />
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textViewAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    </android.support.v7.widget.CardView>
+
     <android.support.v7.widget.ButtonBarLayout
         android:layout_width="match_parent"
         android:layout_height="20px"
         android:id="@+id/buttonPanel">
-
     </android.support.v7.widget.ButtonBarLayout>
 
 </RelativeLayout>
