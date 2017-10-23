@@ -6,10 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.tanut.mapsearch.R;
 import com.example.tanut.mapsearch.data.db.network.model.MapItem;
 import com.example.tanut.mapsearch.ui.map.Adapter;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -23,11 +25,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>{
     private Context context;
 
     public ListAdapter(List<MapItem> items) {
-       this.mapItems = mapItems;
+
+        this.mapItems = items;
     }
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.map_recycler,null);
+        this.context = parent.getContext();
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_list_item,null);
         ListViewHolder listViewHolder = new ListViewHolder(view);
         return listViewHolder;
     }
@@ -36,8 +40,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>{
     public void onBindViewHolder(ListViewHolder holder, int position) {
         MapItem myItem = mapItems.get(position);
         Log.e("item",myItem.getTitle());
-        //holder.textView.setText(myItem.getTitle());
-
+        holder.textViewHeading.setText(myItem.getTitle());
+        holder.textViewAddress.setText(myItem.getFormattedAddress());
+        Picasso.with(context).load(myItem.getIcon()).into(holder.imageView);
+        holder.textViewLatContent.setText((myItem.getGeometry().getLocation().getLat().toString()));
+        holder.textViewLongContent.setText((myItem.getGeometry().getLocation().getLng().toString()));
+        holder.textViewRating.setText(myItem.);
     }
 
     @Override
