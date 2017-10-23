@@ -2,7 +2,6 @@ package com.example.tanut.mapsearch.ui.list;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -42,7 +41,6 @@ public class ListFragment extends BaseFragment implements MainFragment.onDataLoa
     public static final String TAG = "ListFragment";
     private ListPresenterImpl listPresenter;
     private StaggeredGridLayoutManager layoutManager;
-    private List<MapItem> mapItem;
 
     @Inject
     ApiClient apiClient;
@@ -93,10 +91,6 @@ public class ListFragment extends BaseFragment implements MainFragment.onDataLoa
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rv = (RecyclerView)view.findViewById(R.id.recyclerview);
-        rv.addItemDecoration(new SpacesItemDecoration(25));
-        if(mapItem!=null){
-            updateWithData();
-        }
     }
 
     @Override
@@ -108,52 +102,18 @@ public class ListFragment extends BaseFragment implements MainFragment.onDataLoa
     @Override
     public void onDataLoaded(List<MapItem> items) {
 
-        this.mapItem = items;
-        if(getView()!=null){
-            updateWithData();
-        }
-
-
-    }
-
-    private void updateWithData() {
         // here you will get data from SERVICE
-        Log.d(TAG, mapItem.size()+"");
+        Log.d(TAG, items.size()+"");
         rv.setHasFixedSize(true);
-        rv.setAdapter(new ListAdapter(mapItem));
+        rv.setAdapter(new ListAdapter(items));
         layoutManager = new StaggeredGridLayoutManager(2,1);
-        // new GridLayoutManager(getContext(),2);
+               // new GridLayoutManager(getContext(),2);
         rv.setLayoutManager(layoutManager);
         // rv.addOnScrollListener(onScrollListener);
-
     }
 
     @Override
     public void onLocalDataLoaded(List<MyItem> receivedData) {
         // here you will get data from LOCAL
-    }
-}
-
-
-class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-    private int space;
-
-    public SpacesItemDecoration(int space) {
-        this.space = space;
-    }
-
-    @Override
-    public void getItemOffsets(Rect outRect, View view,
-                               RecyclerView parent, RecyclerView.State state) {
-        outRect.left = space;
-        outRect.right = space;
-        outRect.bottom = space;
-
-        // Add top margin only for the first item to avoid double space between items
-        if (parent.getChildLayoutPosition(view) == 0) {
-            outRect.top = space;
-        } else {
-            outRect.top = 0;
-        }
     }
 }
