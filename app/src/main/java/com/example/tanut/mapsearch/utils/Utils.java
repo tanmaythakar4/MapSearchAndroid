@@ -18,8 +18,7 @@ public final class Utils {
     private static final String TAG = "UTILS";
     public static final String LOGTAG1 = "lOGGINGSUCESS";
     public static final String LOGTAG2 = "lOGGINGFAILURE";
-    public static final String KEY = "AIzaSyDSIrtry5LLMdUlbaDDHW4_sIhnBdF7JQE";
-            //"AIzaSyAM0iywwIic7W4LcRS7609Rh6vK9gBaCoA";
+    public static final String KEY = "AIzaSyAM0iywwIic7W4LcRS7609Rh6vK9gBaCoA";
   //  AIzaSyAQklkI8p-pzRSmdyY7PSR5OGnsrZLcSQM
 
     public static final String BASE_URL = "https://maps.googleapis.com/maps/";

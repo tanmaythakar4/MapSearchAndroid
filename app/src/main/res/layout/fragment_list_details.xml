@@ -1,62 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/cardViewOutter"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:padding="20dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cardViewOutter">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/cardViewImage"
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cardViewImage">
+
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="250dp" />
+            android:layout_height="30px"
+            android:id="@+id/imageView"/>
 
         </android.support.v7.widget.CardView>
 
-        <TextView
-            android:id="@+id/textViewHeading"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="280dp"
-            android:fontFamily="Arial"
-            android:gravity="center"
-            android:textSize="32sp"
-            android:textStyle="bold" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewHeading"
+        android:layout_below="@+id/cardViewImage"
+        android:textSize="32sp"
+        android:gravity="center"
+        android:fontFamily="Arial"
+        android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/textViewLatLong"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="330dp"
-            android:text="Location = proxy "
-            android:layout_below="@+id/textViewHeading" />
+    <TextView
+        android:id="@+id/textViewLatLong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewHeading"/>
 
-        <TextView
-            android:id="@+id/textViewAddress"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="370dp"
-            android:layout_below="@+id/textViewLatLong" />
+    <TextView
+        android:id="@+id/textViewAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewLatLong"/>
 
     </android.support.v7.widget.CardView>
 
-    <ImageButton
+    <android.support.v7.widget.ButtonBarLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@color/cardview_light_background"
+        android:layout_height="20px"
         android:layout_below="@+id/cardViewOutter"
-        android:contentDescription="Navigate To Google Maps"
-        />
-
+        android:id="@+id/buttonPanel">
+    </android.support.v7.widget.ButtonBarLayout>
 
 </RelativeLayout>
