@@ -22,6 +22,7 @@ public  interface MapItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addItemList(List<MapItem> items);
 
+
     @Query("select * from "+ AppDatabase.TABLE_NAME )
     public List<MapItem> getAllItem();
 

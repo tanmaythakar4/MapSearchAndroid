@@ -18,6 +18,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.HEAD;
 
 /**
  * Created by tanut on 10/22/2017.
@@ -54,13 +55,14 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void getDataFromService(GoogleMapWebService mapWebService,String querry) {
+    public void getDataFromService(GoogleMapWebService mapWebService, final String querry) {
 
         try {
             mapItems = database.itemModel().getItemForTag(querry);
+            view.showMessage("DATA From DATABASE");
         }
         catch (Exception f){
-            view.onError("ON ERROR");
+            view.onError("ON ERROR FROM DATABASE");
         }
 
         if(mapItems.isEmpty()) {
@@ -72,17 +74,22 @@ public class MainPresenterImpl implements MainPresenter {
                 public void onResponse(Call<MapResult> call, Response<MapResult> response) {
                     if (response.isSuccessful()) {
                         mapItems = response.body().getResults();
+
                         if(!mapItems.isEmpty()) {
+                            view.showMessage("DATA from SEVICE");
+
+                            database.itemModel().addItemList(mapItems);
                             view.manageData(mapItems);
                         }
                         else{
                             view.showMessage("NO DATA");
                         }
                     } else {
-                        Log.d("failure", "ON ERROR1");
-                        view.onError("ON ERROR");
+                        Log.d("failure", "ON ERROR isFail");
+                        view.onError("ON isFail");
                     }
                 }
+
 
                 @Override
                 public void onFailure(Call<MapResult> call, Throwable t) {
@@ -95,6 +102,8 @@ public class MainPresenterImpl implements MainPresenter {
         else{
 
             Log.d("LOCAL",mapItems.size()+" ");
+
+            view.showMessage("DATA from DATABASE");
             view.manageData(mapItems);
         }
     }
