@@ -58,7 +58,13 @@ public class MainPresenterImpl implements MainPresenter {
             @Override
             public void onResponse(Call<MapResult> call, Response<MapResult> response) {
                 if (response.isSuccessful()) {
-                    view.manageData(response.body().getResults());
+                    if(response.body().getResults().size()>0){
+                        view.manageData(response.body().getResults());
+                    }
+                    else{
+                        view.showMessage("NO ITEM");
+                    }
+
                 } else {
                     view.onError("ON ERROR");
                 }

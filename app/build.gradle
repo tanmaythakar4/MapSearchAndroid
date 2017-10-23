@@ -43,7 +43,9 @@ dependencies {
     //Mockito
     testCompile "junit:junit:$rootProject.junitVersion"
     testCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     //retrofit
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
 }

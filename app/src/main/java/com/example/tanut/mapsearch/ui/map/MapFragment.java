@@ -42,7 +42,7 @@ import javax.inject.Inject;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback, MapMvpView, MainFragment.onDataLoadedListener {
 
-    public static final String TAG = "AboutFragment";
+    public static final String TAG = "MapFragment";
 
     private GoogleMap googleMap = null;
     private MapView mapView;
@@ -113,19 +113,19 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
 
     @Override
     public void onDataLoaded(List<MapItem> items) {
-
+        if(googleMap!=null) {
             // Clustering
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(items.get(0).getPosition().latitude, items.get(0).getPosition().longitude), 10));
             mClusterManager = new ClusterManager<MapItem>(getActivity(), googleMap);
             googleMap.setOnCameraIdleListener(mClusterManager);
             mClusterManager.addItems(items);
 
-        // RecyclerView
-        Adapter adapter = new Adapter(getContext(), items);
-        mRecyclerView.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-
+            // RecyclerView
+            Adapter adapter = new Adapter(getContext(), items);
+            mRecyclerView.setAdapter(adapter);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+            mRecyclerView.setLayoutManager(layoutManager);
+        }
     }
 
     @Override
