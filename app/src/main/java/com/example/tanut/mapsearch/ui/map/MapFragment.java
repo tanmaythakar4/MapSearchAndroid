@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +50,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
     private MapView mapView;
     private ClusterManager<MyItem> mClusterManagerLocal;
     private ClusterManager<MapItem> mClusterManager;
+    private ArrayList<MapItem> mapList;
 
     private RecyclerView mRecyclerView;
 
@@ -88,6 +91,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
         mapView.getMapAsync(this);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rvSearchResult);
+
     }
 
     @Override
@@ -98,6 +102,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        updateWithData();
+
     }
 
     @Override
@@ -119,19 +125,26 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
 
     @Override
     public void onDataLoaded(List<MapItem> items) {
+            mapList = (ArrayList<MapItem>) items;
 
-            // Clustering
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(items.get(0).getPosition().latitude, items.get(0).getPosition().longitude), 10));
-            mClusterManager = new ClusterManager<MapItem>(getActivity(), googleMap);
-            googleMap.setOnCameraIdleListener(mClusterManager);
-            mClusterManager.addItems(items);
+    }
+
+    private void updateWithData() {
+
+        if(googleMap==null){
+            Log.d("GOOGLEMAP",mapList.get(0).getLat()+"");
+        }
+        // Clustering
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapList.get(0).getLat(), mapList.get(0).getLng()), 10));
+        mClusterManager = new ClusterManager<MapItem>(getActivity(), googleMap);
+        googleMap.setOnCameraIdleListener(mClusterManager);
+        mClusterManager.addItems(mapList);
 
         // RecyclerView
-        Adapter adapter = new Adapter(getContext(), items);
+        Adapter adapter = new Adapter(getContext(), mapList);
         mRecyclerView.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
-
     }
 
     @Override

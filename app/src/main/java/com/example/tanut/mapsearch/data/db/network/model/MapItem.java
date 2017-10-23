@@ -29,9 +29,11 @@ public class MapItem implements ClusterItem,Parcelable{
     private String formattedAddress;
 
     @SerializedName("geometry")
-    @Expose
+  /*  @Expose
     @Ignore
-    private Geometry geometry;
+    private Geometry geometry;*/
+    private Double lat;
+    private Double lng;
     @SerializedName("icon")
     @Expose
     private String icon;
@@ -40,10 +42,6 @@ public class MapItem implements ClusterItem,Parcelable{
     private String name;
     private String tag;
 
-
-
-    private Double lat;
-    private Double lng;
 
 
 
@@ -57,6 +55,7 @@ public class MapItem implements ClusterItem,Parcelable{
         this.name = name;
         this.tag = tag;
     }
+
 
 
 
@@ -114,6 +113,7 @@ public class MapItem implements ClusterItem,Parcelable{
     public void setFormattedAddress(String formattedAddress) {
         this.formattedAddress = formattedAddress;
     }
+/*
 
     public Geometry getGeometry() {
         return geometry;
@@ -122,6 +122,7 @@ public class MapItem implements ClusterItem,Parcelable{
     public void setGeometry(Geometry geometry) {
         this.geometry = geometry;
     }
+*/
 
     public String getIcon() {
         return icon;
@@ -142,11 +143,16 @@ public class MapItem implements ClusterItem,Parcelable{
     }
 
 
+/*
     @Override
     public LatLng getPosition() {
         return new LatLng(geometry.getLocation().getLat(),geometry.getLocation().getLng());
     }
-
+*/
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(lat,lng);
+    }
     @Override
     public String getTitle() {
         return name;
@@ -239,7 +245,8 @@ public class MapItem implements ClusterItem,Parcelable{
         return "MapItem{" +
                 "id=" + id +
                 ", formattedAddress='" + formattedAddress + '\'' +
-                ", geometry=" + geometry +
+                ", lat=" + lat +
+                ", lng=" + lng +
                 ", icon='" + icon + '\'' +
                 ", name='" + name + '\'' +
                 ", tag='" + tag + '\'' +

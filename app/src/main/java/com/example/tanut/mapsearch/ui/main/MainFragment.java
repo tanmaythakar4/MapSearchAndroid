@@ -99,7 +99,6 @@ public class MainFragment extends BaseFragment implements MainMvpView {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         //dagger
         ((MapSearchApp) getActivity().getApplication()).getMapComponent().inject(this);
-        super.onViewCreated(view, savedInstanceState);
 
         mapFragment = MapFragment.newInstance();
         listFragment = ListFragment.newInstance();
@@ -107,9 +106,13 @@ public class MainFragment extends BaseFragment implements MainMvpView {
         onDataLoadedMapListener = mapFragment;
         onDataLoadedListListener = listFragment;
 
+        super.onViewCreated(view, savedInstanceState);
+
+
+
         // Load MapFragment
         getChildFragmentManager().beginTransaction()
-                .add(R.id.container, mapFragment, MainFragment.TAG).addToBackStack(MapFragment.TAG).commit();
+                .replace(R.id.container, mapFragment, MainFragment.TAG).addToBackStack(MapFragment.TAG).commit();
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +120,7 @@ public class MainFragment extends BaseFragment implements MainMvpView {
             public void onClick(View v) {
                 // Load ListFragment
                 getChildFragmentManager().beginTransaction()
-                        .add(R.id.container, listFragment, ListFragment.TAG).addToBackStack(ListFragment.TAG).commit();
+                        .replace(R.id.container, listFragment, ListFragment.TAG).addToBackStack(ListFragment.TAG).commit();
             }
         });
 
