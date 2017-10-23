@@ -10,5 +10,4 @@ import java.io.InputStream;
 
 public interface ListPresenter extends BaseFragmentPresenter {
 
-    void getGeoPlaceData(String place, InputStream inputStream);
 }

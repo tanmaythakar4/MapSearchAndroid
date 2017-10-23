@@ -13,8 +13,4 @@ import java.util.List;
 
 public interface MapPresenter extends BaseFragmentPresenter {
 
-
-
-    public void migrateToListFragment();
-
 }

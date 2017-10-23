@@ -7,9 +7,9 @@ import android.view.View;
  * Created by Abhimanyu on 10/22/2017.
  */
 
-public class ListHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+public class ListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    public ListHolder(View itemView) {
+    public ListViewHolder(View itemView) {
         super(itemView);
     }
 
