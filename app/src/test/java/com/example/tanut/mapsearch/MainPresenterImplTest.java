@@ -1,6 +1,7 @@
 package com.example.tanut.mapsearch;
 
 import com.example.tanut.mapsearch.data.db.MyItemReader;
+import com.example.tanut.mapsearch.data.db.backend.AppDatabase;
 import com.example.tanut.mapsearch.data.db.model.MyItem;
 import com.example.tanut.mapsearch.data.db.network.model.MapItem;
 import com.example.tanut.mapsearch.ui.main.MainMvpView;
@@ -43,12 +44,15 @@ public class MainPresenterImplTest {
     @Mock
     MyItemReader mReader;
 
+    @Mock
+    AppDatabase database;
+
     private MainPresenterImpl presenter;
     private static final List<MyItem> MANY_ITEM = Arrays.asList(new MyItem(0,0), new MyItem(0,0), new MyItem(0,0));
 
     @Before
     public void setUp() throws Exception {
-        presenter = new MainPresenterImpl(view,mReader);
+        presenter = new MainPresenterImpl(view,mReader,database);
     }
 
     @Test
