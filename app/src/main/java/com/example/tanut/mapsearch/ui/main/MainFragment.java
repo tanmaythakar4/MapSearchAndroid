@@ -47,6 +47,7 @@ import static android.R.id.button1;
 import static android.R.id.button2;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static android.os.Build.VERSION_CODES.M;
+import static com.example.tanut.mapsearch.R.id.view;
 
 /**
  * Created by tanut on 10/22/2017.
@@ -129,7 +130,7 @@ public class MainFragment extends BaseFragment implements MainMvpView {
 
         // Load MapFragment
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.container, mapFragment, MainFragment.TAG).addToBackStack(MapFragment.TAG).commit();
+                .replace(R.id.container, mapFragment, MapFragment.TAG).addToBackStack(MapFragment.TAG).commit();
 
 
         //floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
@@ -154,30 +155,18 @@ public class MainFragment extends BaseFragment implements MainMvpView {
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .addSubActionView(mapButton)
                 .addSubActionView(listButton)
-                // ...
                 .attachTo(actionButton)
                 .build();
-     //    M
+
 
         mapButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                FragmentManager fm = getChildFragmentManager();
-                for(int entry = 0; entry < fm.getBackStackEntryCount(); entry++){
-                    Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getName());
-                }
-
-                MapFragment mapFrag = (MapFragment) getChildFragmentManager().findFragmentByTag(MapFragment.TAG);
-                if(mapFrag != null){
-                    getChildFragmentManager().beginTransaction()
-                            .replace(R.id.container,mapFrag, MapFragment.TAG).commit();
-                }
-                else {
                     getChildFragmentManager().beginTransaction()
                             .replace(R.id.container, mapFragment, MapFragment.TAG).addToBackStack(null).commit();
-                }
+
             }
         });
 
@@ -200,20 +189,10 @@ public class MainFragment extends BaseFragment implements MainMvpView {
         listButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getChildFragmentManager();
-                for(int entry = 0; entry < fm.getBackStackEntryCount(); entry++){
-                    Log.i(TAG, "Found fragment: " + fm.getBackStackEntryAt(entry).getName());
-                }
 
-                ListFragment listFrag = (ListFragment) getChildFragmentManager().findFragmentByTag(ListFragment.TAG);
-                if(listFrag != null){
-                    getChildFragmentManager().beginTransaction()
-                            .replace(R.id.container, listFrag, ListFragment.TAG).commit();
-                }
-                else {
                     getChildFragmentManager().beginTransaction()
                             .replace(R.id.container, listFragment, ListFragment.TAG).addToBackStack(null).commit();
-                }
+
             }
         });
 
