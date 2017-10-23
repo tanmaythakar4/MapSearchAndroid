@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +38,9 @@ import javax.inject.Inject;
 public class ListFragment extends BaseFragment implements MainFragment.onDataLoadedListener {
 
 
-    public static final String TAG = "AboutFragment";
+    public static final String TAG = "ListFragment";
     private ListPresenterImpl listPresenter;
+    private StaggeredGridLayoutManager layoutManager;
 
     @Inject
     ApiClient apiClient;
@@ -104,8 +106,9 @@ public class ListFragment extends BaseFragment implements MainFragment.onDataLoa
         Log.d(TAG, items.size()+"");
         rv.setHasFixedSize(true);
         rv.setAdapter(new ListAdapter(items));
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
-        rv.setLayoutManager(gridLayoutManager);
+        layoutManager = new StaggeredGridLayoutManager(2,1);
+               // new GridLayoutManager(getContext(),2);
+        rv.setLayoutManager(layoutManager);
         // rv.addOnScrollListener(onScrollListener);
     }
 
