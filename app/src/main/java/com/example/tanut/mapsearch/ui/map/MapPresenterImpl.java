@@ -27,13 +27,4 @@ public class MapPresenterImpl implements MapPresenter {
 
     }
 
-
-    @Override
-    public void migrateToListFragment() {
-        // Load MapFragment
-        //getSupportFragmentManager().beginTransaction()
-               // .replace(R.id.fragment_container, MapFragment.newInstance(),MapFragment.TAG).commit();
-
-    }
-
 }

@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +32,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import retrofit2.http.HEAD;
 
 /**
  * Created by tanut on 10/18/2017.
@@ -48,8 +52,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
     private MapView mapView;
     private ClusterManager<MyItem> mClusterManagerLocal;
     private ClusterManager<MapItem> mClusterManager;
+    private ArrayList<MapItem> mapList;
 
     private RecyclerView mRecyclerView;
+
+    private static MapFragment mapFragment;
 
 
     public static MapFragment newInstance() {
@@ -60,7 +67,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
         MapFragment fragment = new MapFragment();
         fragment.setArguments(args);*/
 
-        return new MapFragment();
+       if(mapFragment == null){
+           mapFragment = new MapFragment();
+       }
+
+        return mapFragment;
     }
 
 
@@ -82,6 +93,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
         mapView.getMapAsync(this);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rvSearchResult);
+
     }
 
     @Override
@@ -92,6 +104,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        updateWithData();
+
     }
 
     @Override
@@ -113,19 +127,28 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
 
     @Override
     public void onDataLoaded(List<MapItem> items) {
-        if(googleMap!=null) {
-            // Clustering
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(items.get(0).getPosition().latitude, items.get(0).getPosition().longitude), 10));
-            mClusterManager = new ClusterManager<MapItem>(getActivity(), googleMap);
-            googleMap.setOnCameraIdleListener(mClusterManager);
-            mClusterManager.addItems(items);
 
-            // RecyclerView
-            Adapter adapter = new Adapter(getContext(), items);
-            mRecyclerView.setAdapter(adapter);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-            mRecyclerView.setLayoutManager(layoutManager);
+            mapList = (ArrayList<MapItem>) items;
+
+    }
+
+    private void updateWithData() {
+
+        if(googleMap==null){
+            Log.d("GOOGLEMAP",mapList.get(0).getLat()+"");
         }
+        // Clustering
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapList.get(0).getLat(), mapList.get(0).getLng()), 10));
+        mClusterManager = new ClusterManager<MapItem>(getActivity(), googleMap);
+        googleMap.setOnCameraIdleListener(mClusterManager);
+        mClusterManager.addItems(mapList);
+
+        // RecyclerView
+        Adapter adapter = new Adapter(getContext(), mapList);
+        mRecyclerView.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+
     }
 
     @Override

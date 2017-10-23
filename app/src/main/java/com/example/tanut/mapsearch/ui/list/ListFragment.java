@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +27,6 @@ import com.example.tanut.mapsearch.services.ApiClient;
 import com.example.tanut.mapsearch.services.GoogleMapWebService;
 import com.example.tanut.mapsearch.ui.base.BaseFragment;
 import com.example.tanut.mapsearch.ui.main.MainFragment;
-import com.example.tanut.mapsearch.ui.map.MapFragment;
-import com.example.tanut.mapsearch.ui.map.MapPresenterImpl;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.maps.android.clustering.ClusterManager;
-
-import java.io.InputStream;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -45,19 +40,15 @@ public class ListFragment extends BaseFragment implements MainFragment.onDataLoa
 
     public static final String TAG = "ListFragment";
     private ListPresenterImpl listPresenter;
-    private FloatingActionButton floatingActionButton;
-    private ListPresenterImpl mPresenter;
+    private StaggeredGridLayoutManager layoutManager;
 
     @Inject
     ApiClient apiClient;
 
     @Inject
-    InputStream inputStream;
-
-    @Inject
     GoogleMapWebService mGoogleMapWebService;
+
     RecyclerView rv;
-    GridView gridView;
 
     public ListFragment() {
 
@@ -78,40 +69,28 @@ public class ListFragment extends BaseFragment implements MainFragment.onDataLoa
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-
-        LayoutInflater gridInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = gridInflater.inflate(R.layout.fragment_list, null);
-        GridView gridView = (GridView) view.findViewById(R.id.gridView);
-
         // Inflate the layout for this fragment
-        //View view = inflater.inflate(R.layout.fragment_list, container, false);
-//        Context ct = getContext();
-//        rv = (RecyclerView)view.findViewById(R.id.recyclerview);
-//        rv.setHasFixedSize(true);
-//        rv.setAdapter(new ListAdapter(ct));
-//        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        rv.addOnScrollListener(onScrollListener);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
         return view;
     }
 
 
-    private final RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
-            // code
-        }
-
-        @Override
-        public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
-            // code
-        }
-    };
+//    private final RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
+//        @Override
+//        public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
+//            // code
+//        }
+//
+//        @Override
+//        public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
+//            // code
+//        }
+//    };
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        rv = (RecyclerView)view.findViewById(R.id.recyclerview);
     }
 
     @Override
@@ -119,16 +98,18 @@ public class ListFragment extends BaseFragment implements MainFragment.onDataLoa
 
     }
 
-    public void setUpGridView(GridMvpView view) {
-        mPresenter = new ListPresenterImpl(view, new MyItemReader());
-        mPresenter.getGeoPlaceData(TAG, inputStream);
-    }
 
     @Override
-    public void onDataLoaded(List<MapItem> receivedData) {
-        Log.d(TAG, receivedData.size()+"");
+    public void onDataLoaded(List<MapItem> items) {
 
         // here you will get data from SERVICE
+        Log.d(TAG, items.size()+"");
+        rv.setHasFixedSize(true);
+        rv.setAdapter(new ListAdapter(items));
+        layoutManager = new StaggeredGridLayoutManager(2,1);
+               // new GridLayoutManager(getContext(),2);
+        rv.setLayoutManager(layoutManager);
+        // rv.addOnScrollListener(onScrollListener);
     }
 
     @Override
