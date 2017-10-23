@@ -37,7 +37,7 @@ import javax.inject.Inject;
 public class ListFragment extends BaseFragment implements MainFragment.onDataLoadedListener {
 
 
-    public static final String TAG = "ListFragment";
+    public static final String TAG = "AboutFragment";
     private ListPresenterImpl listPresenter;
 
     @Inject
