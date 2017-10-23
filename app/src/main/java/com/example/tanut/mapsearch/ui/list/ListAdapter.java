@@ -45,6 +45,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListViewHolder>{
         Picasso.with(context).load(myItem.getIcon()).into(holder.imageView);
         holder.textViewLatContent.setText((myItem.getGeometry().getLocation().getLat().toString()));
         holder.textViewLongContent.setText((myItem.getGeometry().getLocation().getLng().toString()));
+        holder.textViewRating.setText(myItem.getTitle());
     }
 
     @Override
