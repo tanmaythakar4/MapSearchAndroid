@@ -12,5 +12,5 @@ public interface MainPresenter {
 
     public void getGeoPlaceData(String place, InputStream inputStream);
 
-    public void getDataFromService(GoogleMapWebService mapWebService);
+    public void getDataFromService(GoogleMapWebService mapWebService,String place);
 }

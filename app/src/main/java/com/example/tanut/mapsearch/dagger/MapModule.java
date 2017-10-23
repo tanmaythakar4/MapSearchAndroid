@@ -3,6 +3,7 @@ package com.example.tanut.mapsearch.dagger;
 import android.content.Context;
 
 import com.example.tanut.mapsearch.R;
+import com.example.tanut.mapsearch.data.db.backend.AppDatabase;
 import com.example.tanut.mapsearch.services.ApiClient;
 import com.example.tanut.mapsearch.services.GoogleMapWebService;
 
@@ -45,5 +46,11 @@ public class MapModule {
     @Singleton
     GoogleMapWebService getMapWebService() {
         return mApiClient.getMapService();
+    }
+
+    @Provides
+    @Singleton
+    AppDatabase getAppDatabase() {
+        return AppDatabase.getDatabase(mContext);
     }
 }

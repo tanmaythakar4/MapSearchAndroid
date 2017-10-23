@@ -51,6 +51,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
 
     private RecyclerView mRecyclerView;
 
+    private static MapFragment mapFragment;
+
 
     public static MapFragment newInstance() {
         //we can use this if we are getting argument from Avtivity
@@ -60,7 +62,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
         MapFragment fragment = new MapFragment();
         fragment.setArguments(args);*/
 
-        return new MapFragment();
+       if(mapFragment == null){
+           mapFragment = new MapFragment();
+       }
+
+        return mapFragment;
     }
 
 
