@@ -1,15 +1,9 @@
 package com.example.tanut.mapsearch.ui.main;
 
-import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
-
-
 import android.support.v7.widget.SearchView;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +20,7 @@ import com.example.tanut.mapsearch.services.GoogleMapWebService;
 import com.example.tanut.mapsearch.ui.base.BaseFragment;
 import com.example.tanut.mapsearch.ui.list.ListFragment;
 import com.example.tanut.mapsearch.ui.map.MapFragment;
-import com.example.tanut.mapsearch.ui.map.MapMvpView;
-import com.example.tanut.mapsearch.ui.map.MapPresenterImpl;
 import com.example.tanut.mapsearch.utils.Utils;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.ClusterManager;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -41,13 +30,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.http.HEAD;
-
-import static android.R.id.button1;
-import static android.R.id.button2;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static android.os.Build.VERSION_CODES.M;
-import static com.example.tanut.mapsearch.R.id.view;
 
 /**
  * Created by tanut on 10/22/2017.
@@ -130,8 +112,8 @@ public class MainFragment extends BaseFragment implements MainMvpView {
 
         // Load MapFragment
         getChildFragmentManager().beginTransaction()
-                .replace(R.id.container, mapFragment, MapFragment.TAG).addToBackStack(MapFragment.TAG).commit();
-
+                .replace(R.id.container, mapFragment, MapFragment.TAG).commit();
+                //addToBackStack(MapFragment.TAG)
 
         //floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
 
