@@ -55,10 +55,10 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     @Override
-    public void getDataFromService(GoogleMapWebService mapWebService, final String querry) {
+    public void getDataFromService(GoogleMapWebService mapWebService,String querry) {
 
         try {
-            mapItems = database.itemModel().getItemForTag(querry);
+            mapItems = database.itemModel().getAllItem();
             view.showMessage("DATA From DATABASE");
         }
         catch (Exception f){
