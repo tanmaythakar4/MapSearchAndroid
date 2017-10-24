@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.tanut.mapsearch.R;
 import com.example.tanut.mapsearch.data.db.model.MyItem;
@@ -130,11 +129,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
 
     private void updateWithData() {
 
-        if(googleMap==null){
+       /* if(googleMap==null){
             Log.d("GOOGLEMAP",mapList.get(0).getLat()+"");
         }
         // Clustering
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapList.get(0).getLat(), mapList.get(0).getLng()), 10));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapList.get(0).getLat(), mapList.get(0).getLng()), 10));*/
         mClusterManager = new ClusterManager<MapItem>(getActivity(), googleMap);
         googleMap.setOnCameraIdleListener(mClusterManager);
         mClusterManager.addItems(mapList);
@@ -153,16 +152,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
        mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MapItem>() {
            @Override
            public boolean onClusterClick(Cluster<MapItem> cluster) {
-               Log.d("onClusterClick","Entered");
-               Toast.makeText(getContext(), cluster.getSize() +"", Toast.LENGTH_SHORT).show();
                LatLngBounds.Builder builder = LatLngBounds.builder();
                for (ClusterItem item : cluster.getItems()) {
                    builder.include(item.getPosition());
                }
-               // Get the LatLngBounds
                final LatLngBounds bounds = builder.build();
 
-               // Animate camera to the bounds
                try {
 
                    googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
@@ -171,8 +166,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
                    Log.d("EXCEPTION FOUND" , e.toString());
                }
 
-               return true;
-           }
+               return true;           }
        });
 
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MapItem>() {
@@ -200,6 +194,25 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
                 listDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
                 listDetailsFragment.show(fm, "DetailFragment");
 
+            }
+        });
+
+        googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                LatLngBounds.Builder builder = LatLngBounds.builder();
+                for (MapItem item : mapList) {
+                    builder.include(new LatLng(item.getLat(),item.getLng()));
+                }
+                final LatLngBounds bounds1 = builder.build();
+
+                try {
+
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds1, 100));
+                } catch (Exception e) {
+
+                    Log.d("EXCEPTION FOUND" , e.toString());
+                }
             }
         });
 
