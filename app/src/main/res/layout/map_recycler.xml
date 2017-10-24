@@ -2,20 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/circle_shape">
+    >
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:padding="15dp">
-    <TextView
-        android:id="@+id/search_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:lines="5"
+    <com.github.pavlospt.CircleView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:cv_titleText="title"
+        app:cv_subtitleText="subtitle"
+        app:cv_titleSize="12dp"
+        app:cv_subtitleSize="9dp"
+        app:cv_titleColor="@color/white"
+        app:cv_fillColor="#3348b3ff"
+        app:cv_subtitleColor="#3348b3ff"
+        app:cv_strokeColorValue="#3348b3ff"
+        app:cv_backgroundColorValue="#3348b3ff"
+        app:cv_strokeWidthSize="0"
+        app:cv_fillRadius="1.0"
+        android:inputType="textMultiLine"
+        android:singleLine="false"
         android:maxLines="5"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-        />
-    </RelativeLayout>
+    android:minLines="2"
+        android:id="@+id/circleView"/>
 </RelativeLayout>
