@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="5dp"
     >
 
     <TextView
-        android:id="@+id/search_title"
+        android:id="@+id/nameTv"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_centerInParent="true"
@@ -18,4 +19,5 @@
         android:textStyle="bold"
         android:text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         />
+
 </RelativeLayout>

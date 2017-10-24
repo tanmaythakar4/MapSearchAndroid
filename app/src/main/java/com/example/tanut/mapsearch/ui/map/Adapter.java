@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.tanut.mapsearch.R;
 import com.example.tanut.mapsearch.data.db.model.MyItem;
 import com.example.tanut.mapsearch.data.db.network.model.MapItem;
+import com.google.android.gms.maps.model.Circle;
 
 import java.util.List;
 
@@ -48,11 +49,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CustomViewHolder> {
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
-        protected TextView textView;
-
+         TextView textView;
         public CustomViewHolder (View view){
            super(view);
-            this.textView = (TextView) view.findViewById(R.id.search_title);
+            this.textView = (TextView) view.findViewById(R.id.nameTv);
         }
 
     }
