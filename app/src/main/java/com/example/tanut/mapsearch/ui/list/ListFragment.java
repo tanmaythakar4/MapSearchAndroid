@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +28,7 @@ import com.example.tanut.mapsearch.data.db.model.MyItem;
 import com.example.tanut.mapsearch.data.db.network.model.MapItem;
 import com.example.tanut.mapsearch.services.ApiClient;
 import com.example.tanut.mapsearch.services.GoogleMapWebService;
+import com.example.tanut.mapsearch.ui.base.BaseActivity;
 import com.example.tanut.mapsearch.ui.base.BaseFragment;
 import com.example.tanut.mapsearch.ui.main.MainFragment;
 
@@ -38,7 +41,7 @@ import javax.inject.Inject;
  * Created by Abhimanyu on 10/21/2017.
  */
 
-public class ListFragment extends BaseFragment implements MainFragment.onDataLoadedListener {
+public class ListFragment extends BaseFragment implements MainFragment.onDataLoadedListener,RecyclerOnItemClickListener {
 
 
     public static final String TAG = "ListFragment";
@@ -128,7 +131,7 @@ public class ListFragment extends BaseFragment implements MainFragment.onDataLoa
         // here you will get data from SERVICE
         Log.d(TAG, mapList.size()+"");
         rv.setHasFixedSize(true);
-        rv.setAdapter(new ListAdapter(mapList));
+        rv.setAdapter(new ListAdapter(mapList,ListFragment.newInstance()));
         layoutManager = new StaggeredGridLayoutManager(2,1);
         // new GridLayoutManager(getContext(),2);
         rv.setLayoutManager(layoutManager);
@@ -138,6 +141,17 @@ public class ListFragment extends BaseFragment implements MainFragment.onDataLoa
     @Override
     public void onLocalDataLoaded(List<MyItem> receivedData) {
         // here you will get data from LOCAL
+    }
+
+    @Override
+    public void onItemClick(View childView, int position) {
+        FragmentManager fm = getChildFragmentManager();
+        ListDetailsFragment listDetailsFragment = ListDetailsFragment.newInstance(mapList.get(position));
+        listDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
+        listDetailsFragment.show(fm, "DetailFragment");
+      /*  getChildFragmentManager().beginTransaction()
+                .add(R.id.container, ListDetailsFragment.newInstance(mapList.get(position)), ListDetailsFragment.TAG).addToBackStack(ListDetailsFragment.TAG).commit();
+*/
     }
 }
 
