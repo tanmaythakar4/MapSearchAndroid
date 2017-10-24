@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +19,7 @@ import com.example.tanut.mapsearch.R;
 import com.example.tanut.mapsearch.data.db.model.MyItem;
 import com.example.tanut.mapsearch.data.db.network.model.MapItem;
 import com.example.tanut.mapsearch.ui.base.BaseFragment;
+import com.example.tanut.mapsearch.ui.list.ListDetailsFragment;
 import com.example.tanut.mapsearch.ui.main.MainFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -145,6 +148,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
         final MyItemRenderer renderer = new MyItemRenderer();
         mClusterManager.setRenderer(renderer);
 
+        googleMap.setOnMarkerClickListener(mClusterManager);
 
        mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MapItem>() {
            @Override
@@ -190,7 +194,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
         mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MapItem>() {
             @Override
             public void onClusterItemInfoWindowClick(MapItem mapItem) {
-
+                Log.d(TAG,"DETAIL CLICK");
+                FragmentManager fm = getChildFragmentManager();
+                ListDetailsFragment listDetailsFragment = ListDetailsFragment.newInstance(mapItem);
+                listDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
+                listDetailsFragment.show(fm, "DetailFragment");
 
             }
         });
