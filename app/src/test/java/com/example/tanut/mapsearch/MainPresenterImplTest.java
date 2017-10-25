@@ -4,6 +4,7 @@ import com.example.tanut.mapsearch.data.db.MyItemReader;
 import com.example.tanut.mapsearch.data.db.backend.AppDatabase;
 import com.example.tanut.mapsearch.data.db.model.MyItem;
 import com.example.tanut.mapsearch.data.db.network.model.MapItem;
+import com.example.tanut.mapsearch.data.db.realm.RealmController;
 import com.example.tanut.mapsearch.ui.main.MainMvpView;
 import com.example.tanut.mapsearch.ui.main.MainPresenterImpl;
 import com.example.tanut.mapsearch.ui.map.MapMvpView;
@@ -47,12 +48,15 @@ public class MainPresenterImplTest {
     @Mock
     AppDatabase database;
 
+    @Mock
+    RealmController realmController;
+
     private MainPresenterImpl presenter;
     private static final List<MyItem> MANY_ITEM = Arrays.asList(new MyItem(0,0), new MyItem(0,0), new MyItem(0,0));
 
     @Before
     public void setUp() throws Exception {
-        presenter = new MainPresenterImpl(view,mReader,database);
+        presenter = new MainPresenterImpl(view,mReader,database,realmController);
     }
 
     @Test

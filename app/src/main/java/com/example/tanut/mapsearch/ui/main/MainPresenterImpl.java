@@ -7,6 +7,7 @@ import com.example.tanut.mapsearch.data.db.backend.AppDatabase;
 import com.example.tanut.mapsearch.data.db.model.MyItem;
 import com.example.tanut.mapsearch.data.db.network.model.MapItem;
 import com.example.tanut.mapsearch.data.db.network.model.MapResult;
+import com.example.tanut.mapsearch.data.db.realm.RealmController;
 import com.example.tanut.mapsearch.services.GoogleMapWebService;
 import com.example.tanut.mapsearch.ui.map.MapMvpView;
 import com.example.tanut.mapsearch.ui.map.MapPresenter;
@@ -15,6 +16,7 @@ import com.example.tanut.mapsearch.utils.Utils;
 import java.io.InputStream;
 import java.util.List;
 
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,11 +32,15 @@ public class MainPresenterImpl implements MainPresenter {
     private List<MapItem> mapItems = null;
     private MyItemReader myItemReader;
     private  AppDatabase database;
+    private RealmController realmController;
+    private Realm realm;
 
-    public MainPresenterImpl(MainMvpView view, MyItemReader myItemReader, AppDatabase database) {
+    public MainPresenterImpl(MainMvpView view, MyItemReader myItemReader, AppDatabase database,RealmController realmController) {
         this.view = view;
         this.myItemReader = myItemReader;
         this.database = database;
+        this.realmController = realmController;
+        this.realm = realmController.getRealm();
     }
 
 
@@ -53,8 +59,8 @@ public class MainPresenterImpl implements MainPresenter {
             view.showMessage("NO ITEM");
         }
     }
-
-    @Override
+    // Tanmay Thakar
+   /* @Override
     public void getDataFromService(GoogleMapWebService mapWebService, final String querry) {
 
         try {
@@ -109,5 +115,69 @@ public class MainPresenterImpl implements MainPresenter {
             view.showMessage("DATA from DATABASE");
             view.manageData(mapItems);
         }
+    }*/
+
+
+    @Override
+    public void getDataFromService(GoogleMapWebService mapWebService, final String querry) {
+
+        try {
+            mapItems = realmController.getBooks(querry);
+            view.showMessage("DATA From DATABASE");
+        }
+        catch (Exception f){
+            view.onError("ON ERROR FROM DATABASE");
+        }
+
+        if(mapItems.isEmpty()) {
+            Call<MapResult> call = mapWebService.getNearbyPlaces(querry, Integer.parseInt(Utils.RADIUS), Utils.KEY);
+
+
+            call.enqueue(new Callback<MapResult>() {
+                @Override
+                public void onResponse(Call<MapResult> call, Response<MapResult> response) {
+                    if (response.isSuccessful()) {
+                        mapItems = response.body().getResults();
+
+                        if(!mapItems.isEmpty()) {
+
+                            for(MapItem item:mapItems){
+                                item.setTag(querry);
+                                realm.beginTransaction();
+                                realm.copyToRealm(item);
+                                realm.commitTransaction();
+                            }
+                            view.showMessage("DATA from SEVICE");
+
+                            view.manageData(mapItems);
+                        }
+                        else{
+                            view.showMessage("NO DATA");
+                        }
+                    } else {
+                        Log.d("failure", "ON ERROR isFail");
+                        view.onError("ON isFail");
+                    }
+                }
+
+
+                @Override
+                public void onFailure(Call<MapResult> call, Throwable t) {
+                    Log.d("failure", t.getCause().getMessage());
+                    view.onError("ON ERROR");
+                }
+            });
+        }
+
+        else{
+
+            Log.d("LOCAL",mapItems.size()+" ");
+
+            view.showMessage("DATA from DATABASE");
+            view.manageData(mapItems);
+        }
     }
+
+
+
 }

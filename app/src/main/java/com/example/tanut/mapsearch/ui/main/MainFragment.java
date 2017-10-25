@@ -15,6 +15,7 @@ import com.example.tanut.mapsearch.data.db.MyItemReader;
 import com.example.tanut.mapsearch.data.db.backend.AppDatabase;
 import com.example.tanut.mapsearch.data.db.model.MyItem;
 import com.example.tanut.mapsearch.data.db.network.model.MapItem;
+import com.example.tanut.mapsearch.data.db.realm.RealmController;
 import com.example.tanut.mapsearch.services.ApiClient;
 import com.example.tanut.mapsearch.services.GoogleMapWebService;
 import com.example.tanut.mapsearch.ui.base.BaseFragment;
@@ -58,8 +59,12 @@ public class MainFragment extends BaseFragment implements MainMvpView {
     @Inject
     GoogleMapWebService mGoogleMapWebService;
 
+/*    @Inject
+    AppDatabase database;*/
+
+AppDatabase database;
     @Inject
-    AppDatabase database;
+    RealmController realmController;
 
     public interface onDataLoadedListener {
         public void onDataLoaded(List<MapItem> receivedData);
@@ -101,7 +106,7 @@ public class MainFragment extends BaseFragment implements MainMvpView {
         super.onCreate(savedInstanceState);
         //dagger
         ((MapSearchApp) getActivity().getApplication()).getMapComponent().inject(this);
-        mPresenter = new MainPresenterImpl(this, new MyItemReader(),database);
+        mPresenter = new MainPresenterImpl(this, new MyItemReader(),database,realmController);
         mPresenter.getDataFromService(mGoogleMapWebService,Utils.QUERY);
 
       //  onDataLoadedMapListener = mapFragment;
