@@ -41,7 +41,7 @@ import javax.inject.Inject;
  * Created by Abhimanyu on 10/21/2017.
  */
 
-public class ListFragment extends BaseFragment implements MainFragment.onDataLoadedListener,RecyclerOnItemClickListener {
+public class ListFragment extends BaseFragment implements RecyclerOnItemClickListener {
 
 
     public static final String TAG = "ListFragment";
@@ -117,7 +117,7 @@ public class ListFragment extends BaseFragment implements MainFragment.onDataLoa
     }
 
 
-    @Override
+
     public void onDataLoaded(List<MapItem> items) {
         mapList = (ArrayList<MapItem>) items;
         if(getView()!=null){
@@ -136,11 +136,6 @@ public class ListFragment extends BaseFragment implements MainFragment.onDataLoa
         // new GridLayoutManager(getContext(),2);
         rv.setLayoutManager(layoutManager);
         // rv.addOnScrollListener(onScrollListener);
-    }
-
-    @Override
-    public void onLocalDataLoaded(List<MyItem> receivedData) {
-        // here you will get data from LOCAL
     }
 
     @Override

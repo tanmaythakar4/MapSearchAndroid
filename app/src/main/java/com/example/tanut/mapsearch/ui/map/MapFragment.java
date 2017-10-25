@@ -20,6 +20,7 @@ import com.example.tanut.mapsearch.data.db.network.model.MapItem;
 import com.example.tanut.mapsearch.ui.base.BaseFragment;
 import com.example.tanut.mapsearch.ui.list.ListDetailsFragment;
 import com.example.tanut.mapsearch.ui.main.MainFragment;
+import com.example.tanut.mapsearch.utils.PicassoMarker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -44,7 +45,7 @@ import java.util.List;
  * Created by tanut on 10/18/2017.
  */
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback, MapMvpView, ClusterManager.OnClusterInfoWindowClickListener<MapItem>, MainFragment.onDataLoadedListener {
+public class MapFragment extends BaseFragment implements OnMapReadyCallback, MapMvpView, ClusterManager.OnClusterInfoWindowClickListener<MapItem>{
 
     public static final String TAG = "MapFragment";
 
@@ -52,7 +53,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
     private MapView mapView;
     private ClusterManager<MyItem> mClusterManagerLocal;
     private ClusterManager<MapItem> mClusterManager;
-    private ArrayList<MapItem> mapList;
+    public ArrayList<MapItem> mapList;
 
     private RecyclerView mRecyclerView;
 
@@ -79,8 +80,20 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mapFragment = (MapFragment) getChildFragmentManager().findFragmentByTag(MapFragment.TAG);
+
+        if(mapFragment==null){
+            mapFragment = newInstance();
+        }
+    }
+
+    @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
         mapView = (MapView) view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
@@ -99,7 +112,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        updateWithData();
+
+        if(mapList!=null && !mapList.isEmpty()){
+            updateWithData(mapList);
+        }
+
 
     }
 
@@ -120,105 +137,102 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
     }
 
 
-    @Override
-    public void onDataLoaded(List<MapItem> items) {
 
-            mapList = (ArrayList<MapItem>) items;
-
-    }
-
-    private void updateWithData() {
+    public void updateWithData(final List<MapItem> mapList) {
 
        /* if(googleMap==null){
             Log.d("GOOGLEMAP",mapList.get(0).getLat()+"");
         }
         // Clustering
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapList.get(0).getLat(), mapList.get(0).getLng()), 10));*/
-        mClusterManager = new ClusterManager<MapItem>(getActivity(), googleMap);
-        googleMap.setOnCameraIdleListener(mClusterManager);
-        mClusterManager.addItems(mapList);
+        this.mapList = (ArrayList<MapItem>) mapList;
+       if(googleMap!=null) {
+           mClusterManager = new ClusterManager<MapItem>(getContext(), googleMap);
+           googleMap.setOnCameraIdleListener(mClusterManager);
+           mClusterManager.addItems(mapList);
 
-        // RecyclerView
-        Adapter adapter = new Adapter(getContext(), mapList);
-        mRecyclerView.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
+           // RecyclerView
+           Adapter adapter = new Adapter(getContext(), mapList);
+           mRecyclerView.setAdapter(adapter);
+           LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+           mRecyclerView.setLayoutManager(layoutManager);
 
-        final MyItemRenderer renderer = new MyItemRenderer();
-        mClusterManager.setRenderer(renderer);
+           final MyItemRenderer renderer = new MyItemRenderer();
+           mClusterManager.setRenderer(renderer);
 
-        googleMap.setOnMarkerClickListener(mClusterManager);
+           googleMap.setOnMarkerClickListener(mClusterManager);
 
-       mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MapItem>() {
-           @Override
-           public boolean onClusterClick(Cluster<MapItem> cluster) {
-               LatLngBounds.Builder builder = LatLngBounds.builder();
-               for (ClusterItem item : cluster.getItems()) {
-                   builder.include(item.getPosition());
+           mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MapItem>() {
+               @Override
+               public boolean onClusterClick(Cluster<MapItem> cluster) {
+                   LatLngBounds.Builder builder = LatLngBounds.builder();
+                   for (ClusterItem item : cluster.getItems()) {
+                       builder.include(item.getPosition());
+                   }
+                   final LatLngBounds bounds = builder.build();
+
+                   try {
+
+                       googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+                   } catch (Exception e) {
+
+                       Log.d("EXCEPTION FOUND", e.toString());
+                   }
+
+                   return true;
                }
-               final LatLngBounds bounds = builder.build();
+           });
 
-               try {
+           mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MapItem>() {
+               @Override
+               public boolean onClusterItemClick(MapItem mapItem) {
 
-                   googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
-               } catch (Exception e) {
-
-                   Log.d("EXCEPTION FOUND" , e.toString());
+                   renderer.getMarker(mapItem).showInfoWindow();
+                   return false;
                }
-
-               return true;           }
-       });
-
-        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MapItem>() {
-            @Override
-            public boolean onClusterItemClick(MapItem mapItem) {
-
-                renderer.getMarker(mapItem).showInfoWindow();
-                return false;
-            }
-        });
+           });
 
 
-        mClusterManager.getMarkerCollection()
-                .setOnInfoWindowAdapter(new CustomInfoViewAdapter(LayoutInflater.from(getActivity())));
+           mClusterManager.getMarkerCollection()
+                   .setOnInfoWindowAdapter(new CustomInfoViewAdapter(LayoutInflater.from(getActivity())));
 
 
-        googleMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+           googleMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
 
-        mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MapItem>() {
-            @Override
-            public void onClusterItemInfoWindowClick(MapItem mapItem) {
-                Log.d(TAG,"DETAIL CLICK");
-                FragmentManager fm = getChildFragmentManager();
-                ListDetailsFragment listDetailsFragment = ListDetailsFragment.newInstance(mapItem);
-                listDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
-                listDetailsFragment.show(fm, "DetailFragment");
+           mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MapItem>() {
+               @Override
+               public void onClusterItemInfoWindowClick(MapItem mapItem) {
+                   Log.d(TAG, "DETAIL CLICK");
+                   FragmentManager fm = getChildFragmentManager();
+                   ListDetailsFragment listDetailsFragment = ListDetailsFragment.newInstance(mapItem);
+                   listDetailsFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
+                   listDetailsFragment.show(fm, "DetailFragment");
 
-            }
-        });
+               }
+           });
 
-        googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                LatLngBounds.Builder builder = LatLngBounds.builder();
-                for (MapItem item : mapList) {
-                    builder.include(new LatLng(item.getLat(),item.getLng()));
-                }
-                final LatLngBounds bounds1 = builder.build();
+           googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+               @Override
+               public void onMapLoaded() {
+                   LatLngBounds.Builder builder = LatLngBounds.builder();
+                   for (MapItem item : mapList) {
+                       builder.include(new LatLng(item.getLat(), item.getLng()));
+                   }
+                   final LatLngBounds bounds1 = builder.build();
 
-                try {
+                   try {
 
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds1, 100));
-                } catch (Exception e) {
+                       googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds1, 100));
+                   } catch (Exception e) {
 
-                    Log.d("EXCEPTION FOUND" , e.toString());
-                }
-            }
-        });
-
+                       Log.d("EXCEPTION FOUND", e.toString());
+                   }
+               }
+           });
+       }
     }
 
-    @Override
+   /* @Override
     public void onLocalDataLoaded(List<MyItem> items) {
         // 1 clustering
         if(googleMap!=null){
@@ -230,7 +244,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Map
 
         }
 
-    }
+    }*/
 
 
     @Override

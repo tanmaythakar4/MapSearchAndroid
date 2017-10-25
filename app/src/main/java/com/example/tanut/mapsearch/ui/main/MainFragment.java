@@ -46,6 +46,7 @@ public class MainFragment extends BaseFragment implements MainMvpView {
     private MapFragment mapFragment = null;
     private ListFragment listFragment = null;
     private static MainFragment mainFragment;
+    private List<MapItem> mapList;
 
 
     @Inject
@@ -67,8 +68,8 @@ public class MainFragment extends BaseFragment implements MainMvpView {
 
     }
 
-    onDataLoadedListener onDataLoadedMapListener;
-    onDataLoadedListener onDataLoadedListListener;
+   // onDataLoadedListener onDataLoadedMapListener;
+   // onDataLoadedListener onDataLoadedListListener;
 
 
     public static MainFragment newInstance() {
@@ -96,24 +97,39 @@ public class MainFragment extends BaseFragment implements MainMvpView {
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         //dagger
         ((MapSearchApp) getActivity().getApplication()).getMapComponent().inject(this);
+        mPresenter = new MainPresenterImpl(this, new MyItemReader(),database);
+        mPresenter.getDataFromService(mGoogleMapWebService,Utils.QUERY);
 
-        mapFragment = MapFragment.newInstance();
-        listFragment = ListFragment.newInstance();
+      //  onDataLoadedMapListener = mapFragment;
+      //  onDataLoadedListListener = listFragment;
 
-        onDataLoadedMapListener = mapFragment;
-        onDataLoadedListListener = listFragment;
+    }
 
+    @Override
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+
+        mapFragment = (MapFragment) getChildFragmentManager().findFragmentByTag(MapFragment.TAG);
+        listFragment = (ListFragment) getChildFragmentManager().findFragmentByTag(ListFragment.TAG);
+        if(mapFragment==null){
+            mapFragment = MapFragment.newInstance();
+            // Load MapFragment
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.container, mapFragment, MapFragment.TAG).commit();
+            //addToBackStack(MapFragment.TAG)
+
+        }
+        if(listFragment==null){
+            listFragment = ListFragment.newInstance();
+        }
+        if(mapList!=null && !mapList.isEmpty()){
+            manageData(mapList);
+        }
         super.onViewCreated(view, savedInstanceState);
 
-
-
-        // Load MapFragment
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.container, mapFragment, MapFragment.TAG).commit();
-                //addToBackStack(MapFragment.TAG)
 
         //floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floatingActionButton);
 
@@ -184,28 +200,30 @@ public class MainFragment extends BaseFragment implements MainMvpView {
 
     @Override
     protected void setUp(View view) {
-        mPresenter = new MainPresenterImpl(this, new MyItemReader(),database);
 
-       /* // for static data
-        mPresenter.getGeoPlaceData(DEFAULT_SEARCH,inputStream);*/
-        mPresenter.getDataFromService(mGoogleMapWebService, Utils.QUERY);
+       // mPresenter.getDataFromService(mGoogleMapWebService, Utils.QUERY);
 
-    }
-
-    @Override
-    public void showMessage(String message) {
-        Log.d(TAG,message);
     }
 
     @Override
     public void manageLocalData(List<MyItem> items) {
-        onDataLoadedMapListener.onLocalDataLoaded(items);
-        onDataLoadedListListener.onLocalDataLoaded(items);
+
+
+      //  onDataLoadedMapListener.onLocalDataLoaded(items);
+      //  onDataLoadedListListener.onLocalDataLoaded(items);
     }
 
     @Override
     public void manageData(List<MapItem> items) {
-        onDataLoadedMapListener.onDataLoaded(items);
-        onDataLoadedListListener.onDataLoaded(items);
+        mapList = items;
+        if(mapFragment!=null){
+            mapFragment.updateWithData(mapList);
+        }
+
+        if(listFragment!=null){
+            listFragment.onDataLoaded(mapList);
+        }
+      //  onDataLoadedMapListener.onDataLoaded(items);
+       // onDataLoadedListListener.onDataLoaded(items);
     }
 }
