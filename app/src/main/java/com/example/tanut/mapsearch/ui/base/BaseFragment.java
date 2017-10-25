@@ -27,11 +27,14 @@ public abstract class BaseFragment extends Fragment implements  MvpView{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
+        //retain fragment
+        setRetainInstance(true);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        hideKeyboard();
         setUp(view);
     }
 
@@ -43,6 +46,12 @@ public abstract class BaseFragment extends Fragment implements  MvpView{
             this.mActivity = activity;
             activity.onFragmentAttached();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        hideKeyboard();
     }
 
     @Override
