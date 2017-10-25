@@ -13,7 +13,7 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {AppModule.class,MapModule.class})
+@Component(modules = {AppModule.class,MapModule.class,RealmModule.class})
 public interface AppComponent {
     void inject(MapSearchApp application);
     void inject(MapFragment mapFragment);
