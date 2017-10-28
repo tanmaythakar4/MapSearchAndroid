@@ -122,7 +122,7 @@ public class MainPresenterImpl implements MainPresenter {
     public void getDataFromService(GoogleMapWebService mapWebService, final String querry) {
 
         try {
-            mapItems = realmController.getBooks(querry);
+            mapItems = realmController.getItems(querry);
             view.showMessage("DATA From DATABASE");
         }
         catch (Exception f){

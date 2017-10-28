@@ -67,7 +67,7 @@ public class RealmController {
         realm.refresh();
     }
 
-    //clear all objects from Book.class
+    //clear all objects from Item.class
     public void clearAll() {
 
         realm.beginTransaction();
@@ -76,37 +76,37 @@ public class RealmController {
         realm.commitTransaction();
     }
 
-    //find all objects in the Book.class
-    public RealmResults<MapItem> getBooks() {
+    //find all objects in the Item.class
+    public RealmResults<MapItem> getItems() {
 
         return realm.where(MapItem.class).findAll();
     }
 /*
     //query a single item with the given id
-    public RealmResults<MapItem> getBooks(String tag) {
+    public RealmResults<MapItem> getItems(String tag) {
 
         return realm.where(MapItem.class).equalTo("tag", tag).findAll();
     }*/
 
 
     //query a single item with the given id
-    public ArrayList<MapItem> getBooks(String tag) {
+    public ArrayList<MapItem> getItems(String tag) {
 
         ArrayList<MapItem> items = new ArrayList<>();
         RealmResults<MapItem> results = realm.where(MapItem.class).equalTo("tag", tag).findAll();
 
-        items.addAll(realm.copyFromRealm(results));
+        items.addAll(results);
         return  items;
     }
-    //check if Book.class is empty
-    public boolean hasBooks() {
+    //check if Item.class is empty
+    public boolean hasItems() {
 
         return !realm.isEmpty();
         //return !realm.allObjects(MapItem.class).isEmpty();
     }
 
 //    //query example
-//    public RealmResults<MapItem> queryedBooks() {
+//    public RealmResults<MapItem> queryedItems() {
 //
 //        return realm.where(MapItem.class)
 //                .contains("tag", "BBVA")
