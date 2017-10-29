@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 25
@@ -22,7 +23,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -30,22 +31,33 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
-
     //Daggger
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
     compile "com.google.dagger:dagger:$rootProject.dagger2Version"
-
     //ButterKnife
     compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
     //play service
     compile "com.google.android.gms:play-services-maps:$rootProject.playLibraryVersion"
     compile "com.google.maps.android:android-maps-utils:$rootProject.mapVersion"
-
     //Mockito
     testCompile "junit:junit:$rootProject.junitVersion"
     testCompile "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
+    //retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+
+    //RxJava
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.6'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    // Circular FAB
+    compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
 
 }

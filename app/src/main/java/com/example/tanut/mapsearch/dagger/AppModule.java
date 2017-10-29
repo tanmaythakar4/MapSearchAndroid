@@ -3,6 +3,8 @@ package com.example.tanut.mapsearch.dagger;
 import android.content.Context;
 
 import com.example.tanut.mapsearch.MapSearchApp;
+import com.example.tanut.mapsearch.data.db.backend.AppDatabase;
+import com.example.tanut.mapsearch.data.db.realm.RealmController;
 
 import javax.inject.Singleton;
 
@@ -28,4 +30,5 @@ public class AppModule {
     Context getApplicationContext() {
         return app;
     }
+
 }

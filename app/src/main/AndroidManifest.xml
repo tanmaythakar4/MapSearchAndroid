@@ -16,7 +16,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:resizeableActivity="true">
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -24,9 +25,9 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBrtGfG2u1T7XNSYRY9TYrRbPbznFxbcFc"/>
+            android:value="AIzaSyByLovh476Z0CD-zpo3wQYF5aVfEkwy8ns"/>
 
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
