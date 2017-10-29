@@ -3,6 +3,7 @@ package com.example.tanut.mapsearch.data.db.realm;
 import android.app.Activity;
 import android.app.Application;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.example.tanut.mapsearch.data.db.network.model.MapItem;
 
@@ -81,6 +82,18 @@ public class RealmController {
 
         return realm.where(MapItem.class).findAll();
     }
+
+
+    public void setItem(final MapItem item){
+
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.insertOrUpdate(item);
+                }
+            });
+
+    }
 /*
     //query a single item with the given id
     public RealmResults<MapItem> getItems(String tag) {
@@ -94,8 +107,8 @@ public class RealmController {
 
         ArrayList<MapItem> items = new ArrayList<>();
         RealmResults<MapItem> results = realm.where(MapItem.class).equalTo("tag", tag).findAll();
-
-        items.addAll(results);
+        Log.d("DB SIZE:: ",results.size()+"");
+        items.addAll(realm.copyFromRealm(results));
         return  items;
     }
     //check if Item.class is empty

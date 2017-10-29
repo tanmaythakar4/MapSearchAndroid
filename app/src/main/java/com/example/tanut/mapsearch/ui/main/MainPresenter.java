@@ -10,7 +10,5 @@ import java.io.InputStream;
 
 public interface MainPresenter {
 
-    public void getGeoPlaceData(String place, InputStream inputStream);
-
-    public void getDataFromService(GoogleMapWebService mapWebService,String place);
+    public void getDataFromService(String place);
 }

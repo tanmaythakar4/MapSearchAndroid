@@ -1,26 +1,14 @@
 package com.example.tanut.mapsearch.ui.main;
 
-import android.util.Log;
-
-import com.example.tanut.mapsearch.data.db.MyItemReader;
-import com.example.tanut.mapsearch.data.db.backend.AppDatabase;
 import com.example.tanut.mapsearch.data.db.model.MyItem;
 import com.example.tanut.mapsearch.data.db.network.model.MapItem;
+import com.example.tanut.mapsearch.data.db.network.model.MapItemRepository;
 import com.example.tanut.mapsearch.data.db.network.model.MapResult;
-import com.example.tanut.mapsearch.data.db.realm.RealmController;
-import com.example.tanut.mapsearch.services.GoogleMapWebService;
-import com.example.tanut.mapsearch.ui.map.MapMvpView;
-import com.example.tanut.mapsearch.ui.map.MapPresenter;
-import com.example.tanut.mapsearch.utils.Utils;
+import com.example.tanut.mapsearch.services.NetworkError;
 
-import java.io.InputStream;
 import java.util.List;
 
-import io.realm.Realm;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.http.HEAD;
+import rx.Subscription;
 
 /**
  * Created by tanut on 10/22/2017.
@@ -30,35 +18,56 @@ public class MainPresenterImpl implements MainPresenter {
     private MainMvpView view;
     private List<MyItem> items = null;
     private List<MapItem> mapItems = null;
-    private MyItemReader myItemReader;
-    private  AppDatabase database;
-    private RealmController realmController;
-    private Realm realm;
-
-    public MainPresenterImpl(MainMvpView view, MyItemReader myItemReader, AppDatabase database,RealmController realmController) {
+    private MapItemRepository mapItemRepository;
+    public MainPresenterImpl(MainMvpView view, MapItemRepository mapItemRepository) {
         this.view = view;
-        this.myItemReader = myItemReader;
-        this.database = database;
-        this.realmController = realmController;
-        this.realm = realmController.getRealm();
-    }
+        this.mapItemRepository = mapItemRepository;
 
+    }
 
     @Override
-    public void getGeoPlaceData(String place, InputStream inputStream) {
+    public void getDataFromService(String place) {
 
+        view.showLoading();
         try {
-            items = myItemReader.read(inputStream);
-        } catch (Exception f) {
-            view.onError("ON ERROR");
+            mapItems = mapItemRepository.getMapItemRealm(place);
+        }catch (Exception e){
+            view.hideLoading();
+            view.onError("ERRO WHILE GETING DATA FROM DATABASE");
         }
 
-        if (!items.isEmpty()) {
-            view.manageLocalData(items);
-        } else {
-            view.showMessage("NO ITEM");
+        if(mapItems.isEmpty()){
+            Subscription subscription = mapItemRepository.getMapItemRetrofit(place, new MapItemRepository.GetListCallback() {
+                @Override
+                public void onSuccess(MapResult cityListResponse) {
+                    view.hideLoading();
+                    mapItems = cityListResponse.getResults();
+
+                    if(mapItems.isEmpty()){
+                        view.showMessage("No DATA FROM RETROFIT");
+                    }
+                    else{
+                        view.manageData(mapItems);
+                    }
+
+                }
+
+                @Override
+                public void onError(NetworkError networkError) {
+                    view.hideLoading();
+                    view.onError("ERRO WHILE GETING DATA FROM Retrofit");
+                }
+            });
+
         }
+        else{
+            view.hideLoading();
+            view.manageData(mapItems);
+        }
+
     }
+
+
     // Tanmay Thakar
    /* @Override
     public void getDataFromService(GoogleMapWebService mapWebService, final String querry) {
@@ -118,7 +127,7 @@ public class MainPresenterImpl implements MainPresenter {
     }*/
 
 
-    @Override
+  /*  @Override
     public void getDataFromService(GoogleMapWebService mapWebService, final String querry) {
 
         try {
@@ -143,6 +152,7 @@ public class MainPresenterImpl implements MainPresenter {
 
                             for(MapItem item:mapItems){
                                 item.setTag(querry);
+                                //realmController.setItem(item);
                                 realm.beginTransaction();
                                 realm.copyToRealm(item);
                                 realm.commitTransaction();
@@ -176,7 +186,7 @@ public class MainPresenterImpl implements MainPresenter {
             view.showMessage("DATA from DATABASE");
             view.manageData(mapItems);
         }
-    }
+    }*/
 
 
 
