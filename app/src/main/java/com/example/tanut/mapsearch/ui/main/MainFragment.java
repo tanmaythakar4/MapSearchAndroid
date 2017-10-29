@@ -15,6 +15,7 @@ import com.example.tanut.mapsearch.data.db.MyItemReader;
 import com.example.tanut.mapsearch.data.db.backend.AppDatabase;
 import com.example.tanut.mapsearch.data.db.model.MyItem;
 import com.example.tanut.mapsearch.data.db.network.model.MapItem;
+import com.example.tanut.mapsearch.data.db.network.model.MapItemRepository;
 import com.example.tanut.mapsearch.data.db.realm.RealmController;
 import com.example.tanut.mapsearch.services.ApiClient;
 import com.example.tanut.mapsearch.services.GoogleMapWebService;
@@ -106,8 +107,9 @@ AppDatabase database;
         super.onCreate(savedInstanceState);
         //dagger
         ((MapSearchApp) getActivity().getApplication()).getMapComponent().inject(this);
-        mPresenter = new MainPresenterImpl(this, new MyItemReader(),database,realmController);
-        mPresenter.getDataFromService(mGoogleMapWebService,Utils.QUERY);
+        MapItemRepository mapItemRepository = new MapItemRepository(realmController,mGoogleMapWebService);
+        mPresenter = new MainPresenterImpl(this, mapItemRepository);
+        mPresenter.getDataFromService(Utils.QUERY);
 
       //  onDataLoadedMapListener = mapFragment;
       //  onDataLoadedListListener = listFragment;
@@ -178,7 +180,7 @@ AppDatabase database;
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                mPresenter.getDataFromService(mGoogleMapWebService, query);
+                mPresenter.getDataFromService(query);
                 return false;
             }
 
